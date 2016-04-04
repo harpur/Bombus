@@ -26,7 +26,7 @@ Bimp09b|08.16.13.01|Laurence's house|43°39.756' N, 79°26.263' W
 Bimp11|08.09.13.02|Rasberry farm|43°57.721' N, 79°33.270' W
 
 ####Alignment details
-Alignment followed standard (GATK Best Practices for aligning genomes)[http://www.broadinstitute.org/partnerships/education/broade/gatk-best-practices-and-building-analysis-pipelines-queue]. In brief:
+Alignment followed standard [GATK Best Practices for aligning genomes](http://www.broadinstitute.org/partnerships/education/broade/gatk-best-practices-and-building-analysis-pipelines-queue). In brief:
 1) Trim fastq of adaptor sequences 
 2) Align with BWA v0.7.5a-r405 sampe to the Bobmus terrestris reference genome (see below)
 3) Remove Duplicate Reads with PCIARD v 1.141  AddOrReplaceReadGroups 
