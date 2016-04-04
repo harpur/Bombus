@@ -27,9 +27,9 @@ Bimp11|08.09.13.02|Rasberry farm|43°57.721' N, 79°33.270' W
 
 ####Alignment details
 Alignment followed standard [GATK Best Practices for aligning genomes](http://www.broadinstitute.org/partnerships/education/broade/gatk-best-practices-and-building-analysis-pipelines-queue). In brief:
-1) Trim fastq of adaptor sequences 
-2) Align with BWA v0.7.5a-r405 sampe to the Bobmus terrestris reference genome (see below)
-3) Remove Duplicate Reads with PCIARD v 1.141  AddOrReplaceReadGroups 
+1. Trim fastq of adaptor sequences 
+2. Align with BWA v0.7.5a-r405 sampe to the Bobmus terrestris reference genome (see below)
+3. Remove Duplicate Reads with PCIARD v 1.141  AddOrReplaceReadGroups 
 
 ####SNP Calling
 SNP calling was performed with GATK v 3.5-0-g36282e4 UnifiedGenotyper, as below, for all samples (see bombusalign.sh). We repeated this call with --glm indel for indels and again using --ploidy 2 to identify regions of the genome to exclude (see below)
