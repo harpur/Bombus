@@ -31,7 +31,6 @@ Alignment followed standard (GATK Best Practices for aligning genomes)[http://ww
 2) Align with BWA v0.7.5a-r405 sampe to the Bobmus terrestris reference genome (see below)
 3) Remove Duplicate Reads with PCIARD v 1.141  AddOrReplaceReadGroups 
 
-
 ####SNP Calling
 SNP calling was performed with GATK v 3.5-0-g36282e4 UnifiedGenotyper, as below, for all samples (see bombusalign.sh). We repeated this call with --glm indel for indels and again using --ploidy 2 to identify regions of the genome to exclude (see below)
 
@@ -46,7 +45,11 @@ SNP calling was performed with GATK v 3.5-0-g36282e4 UnifiedGenotyper, as below,
 	-ploidy 1 &
 </code></pre>
 
-Following these raw SNP and indel calls, we 
+Following these raw SNP and indel calls, I trimmed all SNPs within 10bp of an indel and all SNPs with QD < 5.0, FS > 40.0, or MQ < 25.0. I also remove all SNPs within 5 bp of a SNP that was called as heterozygotic in at least 2 drone samples (putativeCNV.list)
+
+####SNP Functional Roles
+Identified putative functional role of SNPs using SNPEFF v XXXXXXXX. I collated a list of genes with polymorphic stop codons that will be masked from analysis
+
 
 
 
@@ -58,9 +61,9 @@ I pulled all the CDS from the genome and translated them (with THIS SCRIPT). BLA
 
 
 ####Masking the Bombus Genome
+putativeCNV.list from heteroSNPs
 
-
-
+mask via BLAST?
 
 
 
