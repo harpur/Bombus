@@ -46,13 +46,12 @@ SNP calling was performed with GATK v 3.5-0-g36282e4 UnifiedGenotyper, as below,
 	-ploidy 1 &
 </code></pre>
 
-Following these raw SNP and indel calls, I trimmed all SNPs within 10bp of an indel and all SNPs with QD < 5.0, FS > 40.0, or MQ < 25.0. I also remove all SNPs within 5 bp of a SNP that was called as heterozygotic in at least 2 drone samples (putativeCNV.list)
+Following these raw SNP and indel calls, I trimmed all SNPs within 10bp of an indel and all SNPs with QD < 5.0, FS > 40.0, or MQ < 25.0. I also remove all SNPs within 5 bp of a SNP that was called as heterozygotic in at least 2 drone samples (putativeCNV.list), and diallelic
 
 ####SNP Functional Roles
-Identified putative functional role of SNPs using SNPEFF v XXXXXXXX. I collated a list of genes with polymorphic stop codons that will be masked from analysis
+Identified putative functional role of SNPs using SNPEFF v 3.6c. [I created a custom B. impatiens database](http://snpeff.sourceforge.net/SnpEff_manual.html#databases) with the GFF and reference fasta as a text output (-o txt).
 
-
-
+Final output for this is "exons.eff" for each species and "warnexons.eff" that lists genes with polymorphic stop codons. 
 
 
 ####GFF and Genome Versions 
@@ -62,15 +61,8 @@ I pulled all the CDS from the genome and translated them (with THIS SCRIPT). BLA
 
 
 ####Masking the Bombus Genome
-putativeCNV.list from heteroSNPs
-
-mask via BLAST?
-
-
-
-
-
-
+1. putativeCNV.list contains a list of sites in the genome in which at least 2/10 haploid drone samples were called as heterozygotic
+2. PolyStop.list contains a list of genes with stop codons (from compiled "warnexons.eff") 
 
 #####Conversions
 For conversion between versions of the genome, orthologs, and gene names consult /GFF/ . We used BLAST best matches for conversion between genomes and for Fly "orthologs". For honey bee orthologs, we used a reciprocal best blast.

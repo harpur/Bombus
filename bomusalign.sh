@@ -56,8 +56,8 @@ gatk -R $BOMBUS/BimpFullGenome.fa -T UnifiedGenotyper \
 	-stand_emit_conf 40.0 \
 	-dcov 200 \
 	--min_base_quality_score 20  \
-	-nt 20 -glm indel  \
-	-ploidy 2
+	-nt 30 -glm SNP  \
+	-ploidy 2 &
  
   
  #BETR
