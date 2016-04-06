@@ -97,7 +97,7 @@ java -jar $SNPEFF/snpEff.jar Bimp \
 	-no-upstream > out.snpeff.eff
 	
 sed '/SYNONYMOUS/ !d' out.snpeff.eff > exons.eff #take only SNPS within exons from output file
-sed '/WARNING/ !d' exons.eff > warnexons.eff #take out warnings from output file
+sed '/WARNING_/ !d' exons.eff > warnexons.eff #take out warnings from output file
 sed -i '/WARNING/ d' exons.eff 
 
 
@@ -105,6 +105,9 @@ sed -i '/WARNING/ d' exons.eff
 cut -f 1,2 exons.eff  > synnsyn.list 
 vcftools --vcf out.indel.dp.q.recode.vcf --positions synnsyn.list --recode --out out.nsyn
 
+#create tabix index for merging ----------------------------------
+bgzip out.nsyn.recode.vcf
+tabix -p vcf out.nsyn.recode.vcf.gz
 
 
 

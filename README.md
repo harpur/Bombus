@@ -71,18 +71,22 @@ I pulled all the CDS from the genome and translated them. BLAST'ed them against 
 
 The SNIPRE input file looks like this (this is an example, not real data)
 
-<pre><code>      GeneID PR FR PS FS Total_Syn Trepl nout npop
+<pre><code>      GeneID GeneID PR FR PS FS Tsil Trepl nout npop
  NP_001267051.1  3 35  3 41 364.66667  1000   10    8
  NP_001267052.1  9 27  6 12 244.00000  1000   10    8
  XP_003484388.1 10 44  4  1  65.33333  1000   10    8
 ...
 </code></pre>
 
+Go get this output, I merged my vcf files for each species using vcf-merge:
+<pre><code> 
+vcf-merge out.nsyn.recode.vcf.gz out.nsyn.recode.vcf.gz | bgzip -c > /vcf/bombus.vcf.gz
+</code></pre>
+
+CreateMK.r builds an MK table from this merged VCF and it's corresponding SNPEFF txt output. It then compiles the MK table into a table for SNIPRE
 
 
-
-
-
+SNIPRE is then run with THIS SCRIPT (SNIPRE.R on my desktop).
 
 #####Conversions
 For conversion between versions of the genome, orthologs, and gene names consult /GFF/ . We used BLAST best matches for conversion between genomes and for Fly "orthologs". For honey bee orthologs, we used a reciprocal best blast.
