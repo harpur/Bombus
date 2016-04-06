@@ -51,18 +51,38 @@ Following these raw SNP and indel calls, I trimmed all SNPs within 10bp of an in
 ####SNP Functional Roles
 Identified putative functional role of SNPs using SNPEFF v 3.6c. [I created a custom B. impatiens database](http://snpeff.sourceforge.net/SnpEff_manual.html#databases) with the GFF and reference fasta as a text output (-o txt).
 
-Final output for this is "exons.eff" for each species and "warnexons.eff" that lists genes with polymorphic stop codons. 
+Final output for this is "exons.eff" for each species and "warnexons.eff" that lists genes with polymorphic stop codons. "exons.eff" was also used to compile a list of SNPs within genes for each species, called "out.nsyn.recode.vcf"
 
 
 ####GFF and Genome Versions 
-We downloaded the GFF v 2.0 from NCBI and the corresponding reference genome. We use make_snpeff_input.py to take the longest transcript and if equal lengths, takes the first case.
+We downloaded the GFF v 2.0 (/data/genes.gff for CDS regions) from NCBI and the corresponding reference genome. We use make_snpeff_input.py to take the longest transcript and if equal lengths, takes the first case.
 Following SNPEff (below), we also excluded genes within comparisons that stop-codons or were of incorrect transcript length
-I pulled all the CDS from the genome and translated them (with THIS SCRIPT). BLAST'ed them against mtDNA to ensure we didn't have any mtDNA sequence within the genome.  
+I pulled all the CDS from the genome and translated them. BLAST'ed them against mtDNA to ensure we didn't have any mtDNA sequence within the genome.  
 
 
 ####Masking the Bombus Genome
-1. putativeCNV.list contains a list of sites in the genome in which at least 2/10 haploid drone samples were called as heterozygotic
+1. BombusCNV.list contains a list of sites in the genome in which at least 2/10 haploid drone samples were called as heterozygotic in either of the Bombus genomes. Created from merged "putativeCNV.list" files.
 2. PolyStop.list contains a list of genes with stop codons (from compiled "warnexons.eff") 
+3. ScaffoldSummary contains statistics on scaffolds in BIMP genome 
+
+
+####Running SNIPRE
+[Bustamante's SnIPRE](http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1002806) was used to to estimate the selection coefficient on each gene inthe genome, along with MK test statistics. 
+
+The SNIPRE input file looks like this (this is an example, not real data)
+
+<pre><code>      GeneID PR FR PS FS Total_Syn Trepl nout npop
+ NP_001267051.1  3 35  3 41 364.66667  1000   10    8
+ NP_001267052.1  9 27  6 12 244.00000  1000   10    8
+ XP_003484388.1 10 44  4  1  65.33333  1000   10    8
+...
+</code></pre>
+
+
+
+
+
+
 
 #####Conversions
 For conversion between versions of the genome, orthologs, and gene names consult /GFF/ . We used BLAST best matches for conversion between genomes and for Fly "orthologs". For honey bee orthologs, we used a reciprocal best blast.
