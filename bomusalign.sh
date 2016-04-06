@@ -5,7 +5,7 @@
 
 
 #Environment variables -------------------------------
-export BOMBUS=/media/data2/bombus
+export BOMBUS=/media/data2/bombus 
 export MASK=/media/data1/bombus/MaskedSNPs
 export SNPEFF=/usr/local/lib/snpEff2
 
@@ -45,7 +45,7 @@ gatk -R $BOMBUS/BimpFullGenome.fa -T UnifiedGenotyper \
 	-stand_emit_conf 40.0 \
 	-dcov 200 \
 	--min_base_quality_score 20  \
-	-nt 20 -glm SNP  \
+	-nt 35 -glm SNP  \
 	-ploidy 2
 	
 #Output hetero SNPs --------------------

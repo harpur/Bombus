@@ -1,0 +1,3 @@
+[submodule "GenomeR"]
+	path = GenomeR
+	url = https://github.com/harpur/GenomeR.git
