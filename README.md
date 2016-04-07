@@ -66,10 +66,20 @@ I pulled all the CDS from the genome and translated them. BLAST'ed them against 
 3. ScaffoldSummary contains statistics on scaffolds in BIMP genome 
 
 
-####Running SNIPRE
+####Running SnIPRE
 [Bustamante's SnIPRE](http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1002806) was used to to estimate the selection coefficient on each gene inthe genome, along with MK test statistics. 
 
-The SNIPRE input file looks like this (this is an example, not real data)
+
+SnIPRE requires the following R packages and sources:
+	1. lme4
+	2. R2jags
+	3. arm
+	4. B_SnIPRE_source.R (from Bustamante)
+	5. SnIPRE_source.R (from Bustamante)
+	6. my.jags2.R (from Bustamante)
+	7. SnIPRE.bug (from Bustamante)
+
+The SnIPRE input file looks like the following table. This is an example, not real data, but headers must be the same
 
 <pre><code>      GeneID GeneID PR FR PS FS Tsil Trepl nout npop
  NP_001267051.1  3 35  3 41 364.66667  1000   10    8
@@ -83,10 +93,14 @@ Go get this output, I merged my vcf files for each species using vcf-merge:
 vcf-merge out.nsyn.recode.vcf.gz out.nsyn.recode.vcf.gz | bgzip -c > /vcf/bombus.vcf.gz
 </code></pre>
 
-CreateMK.r builds an MK table from this merged VCF and it's corresponding SNPEFF txt output. It then compiles the MK table into a table for SNIPRE
+CreateMK.r builds an MK table from this merged VCF and it's corresponding SNPEFF txt output. It then compiles the MK table (MK.snipre) into a table for SnIPRE
 
+SNIPRE is then run with SNIPRE.R
+<pre><code> 
+Rscript SNIPRE.R "MK.snipre"
+</code></pre>
 
-SNIPRE is then run with THIS SCRIPT (SNIPRE.R on my desktop).
+Empirical SnIPRE results output in .csv file ending in ".ebresults" and Bayesian output in .csv ending in ".bayesianresults"
 
 #####Conversions
 For conversion between versions of the genome, orthologs, and gene names consult /GFF/ . We used BLAST best matches for conversion between genomes and for Fly "orthologs". For honey bee orthologs, we used a reciprocal best blast.
