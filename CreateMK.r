@@ -27,6 +27,15 @@ snpeff  = "exons.eff" #argument here
 # Load functions ------------------------------------------
 source("/git/GenomeR/VCFFunctions.r")
 
+mk.test<-function(x){
+	mat = matrix(nr=2,nc=2)
+	mat[,1] = c(x[4],x[3])
+	mat[,2] = c(x[2],x[1])
+	fish = fisher.test(mat)$p.value
+	ni = (x[1] / x[3]) / (x[2] / x[4])
+	return(c(fish,ni))
+}
+
 # Load VCF and Putative Functional Roles -------------------------------------------------
 vcf = Read.VCF()
 snpeff  = read.table(file=snpeff, header=F) 
@@ -120,6 +129,22 @@ MK.snipre = MK.snipre[-c(8)]
 MK.snipre$nout = rep(n2,nrow(MK.snipre))
 MK.snipre$npop = rep(n1,nrow(MK.snipre))
 write.table(MK.snipre, file="MK.snipre", col.names = T, row.names=F, quote = F)
+
+# Estimate alpha, NI, MK test -----------------------------------
+MK.snipre1 = MK.snipre[c(2,3,4,5)] 
+mk.res = apply(MK.snipre1, 1, function(x) mk.test(x))
+
+fish = mk.res[1,]
+ni = mk.res[2,]
+ni[is.na(ni)] = 0
+ni[ni=="-Inf"] = 0
+ni[ni=="Inf"] = 0
+MK.snipre$NI = ni 
+MK.snipre$MKp = fish
+
+write.table(MK.snipre, file="MKresults", col.names = T, row.names=F, quote = F)
+
+
 
 
 

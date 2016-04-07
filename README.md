@@ -94,14 +94,16 @@ Go get this output, I merged my vcf files for each species using vcf-merge:
 vcf-merge out.nsyn.recode.vcf.gz out.nsyn.recode.vcf.gz | bgzip -c > /vcf/bombus.vcf.gz
 </code></pre>
 
-CreateMK.r builds an MK table from this merged VCF and it's corresponding SNPEFF txt output. It then compiles the MK table (MK.snipre) into a table for SnIPRE
+CreateMK.r builds an MK table from this merged VCF and it's corresponding SNPEFF txt output. It then compiles the MK table  into a table for SnIPRE( MK.snipre). As well, writes out MK test results and Neutrality index (MKresults). This test does not add +1 to every cell in the MK matrix to account for 0 entries. To Do: Make this script take arguments and run from command line.
+
+The Neutrality index can be plotted as per [Li et al. (2008)](http://onlinelibrary.wiley.com/doi/10.1111/j.1558-5646.2008.00486.x/full) using MKplot.r (NI.pdf) 
 
 SNIPRE is then run with SNIPRE.R
 <pre><code> 
 Rscript SNIPRE.R "MK.snipre"
 </code></pre>
 
-Empirical SnIPRE results output in .csv file ending in ".ebresults" and Bayesian output in .csv ending in ".bayesianresults"
+Bayesian output in .csv ending in ".bayesianresults"
 
 #####Conversions
 For conversion between versions of the genome, orthologs, and gene names consult /GFF/ . We used BLAST best matches for conversion between genomes and for Fly "orthologs". For honey bee orthologs, we used a reciprocal best blast.
