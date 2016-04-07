@@ -69,7 +69,6 @@ I pulled all the CDS from the genome and translated them. BLAST'ed them against 
 ####Running SnIPRE
 [Bustamante's SnIPRE](http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1002806) was used to to estimate the selection coefficient on each gene inthe genome, along with MK test statistics. 
 
-
 SnIPRE requires the following R packages and sources:
 	1. lme4
 	2. R2jags
@@ -79,6 +78,7 @@ SnIPRE requires the following R packages and sources:
 	6. my.jags2.R (from Bustamante)
 	7. SnIPRE.bug (from Bustamante)
 
+	
 The SnIPRE input file looks like the following table. This is an example, not real data, but headers must be the same
 
 <pre><code>      GeneID GeneID PR FR PS FS Tsil Trepl nout npop
