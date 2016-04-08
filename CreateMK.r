@@ -1,3 +1,4 @@
+#!/usr/bin/Rscript
 ###
 # Count Fixed and Polymorphic Sites in Haploid Data
 ###
@@ -52,7 +53,7 @@ alleles = sapply(vcf,function(x) nchar(x[5]))
 vcf = vcf[-which(alleles>1)]
 
 #Get list of all sites --------------------------------------
-chrom = sapply(vcf,function(x) return(c(x[1],x[2]))) #list containing  
+chrom = sapply(vcf,function(x) return(c(x[1],x[2]))) #list containing  alls caffolds and positions
 
 #Count number of polymorphic sites and missing sites for N1 ------------------
 ones = sapply(vcf, function(x) (length(x[10:n1.last][grep("^1:", x[10:n1.last])]))) #counts number of "1:'s"
@@ -117,8 +118,8 @@ snpeff$V13 = nsyn.update
 MK =  merge(snpeff, FP, by = "ID")
 MK$MK = paste(MK$V13, MK$FP, sep="_")
 MK  = aggregate(MK$MK, by = list(MK$V9), table)
-write.table(MK, file="MKtable")
-MK = read.table(file="MKtable",header=T)
+write.table(MK, file="MKtableraw")
+MK = read.table(file="MKtableraw",header=T)
 names(MK) = c("GeneID","FR","PR","FS", "PS")
 MK = MK[c(1,3,2,5,4)]
 

@@ -13,7 +13,7 @@ InputFile = args[1]
 #################################################################
 ## Mung Data Frame, load datasets
 #################################################################
-
+source("B_SnIPRE_source.R")
 source("SnIPRE_source.R")
 source("my.jags2.R")
 library(lme4)
@@ -34,7 +34,7 @@ data = (data[(len-snplen)>1,]) #remove any cases where Rep + Syn sites < number 
 ##          B_SnIPRE_source.R, and WinBUGS or OpenBUGS) necessary
 #################################################################
 
-source("B_SnIPRE_source.R")
+
 
 #data <- read.table(InputFile, header = TRUE)
 #BSnIPRE.run <- function(mydata, path = ".", burnin = 500, thin = 5, iter = 2500){

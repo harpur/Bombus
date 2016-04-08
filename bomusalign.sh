@@ -9,6 +9,7 @@ export BOMBUS=/media/data2/bombus
 export MASK=/media/data1/bombus/MaskedSNPs
 export SNPEFF=/usr/local/lib/snpEff2
 export GIT=/data2/bombus/git
+export DATA=/data2/bombus/git/data
 
 # Call SNPs with GATK -----------------------------------
 	#All 
@@ -88,27 +89,28 @@ vcftools --vcf out.vcf --recode --remove-filtered-all --max-alleles 2 --out out.
 # Filter Depth and Quality outliers  -----------------------------------
 Rscript $GIT/VCFQualityDepthFilter.r "out.indel.recode.vcf" 
 
+# Filter out poorly-coverged scaffolds  -----------------------------------
+	#mean depth < 3 in BIMP (/data/LowCoverageScaffolds)
+grep -vFwf $DATA/LowCoverageScaffolds out.indel.dp.q.recode.vcf > final.vcf #for each species, I created one cnv.vcf.
+				#cp final.vcf /mnt/nfs/data1/apis/forty3/brock
+				#cp /mnt/nfs/data1/apis/forty3/brock/out.snpeff.eff /data2/bombus/bam_Bter_to_Bimp/ 
 # Calling synonymous and non-synonymous sites -------------------------
 	#note, v4.0 of SNPEFF no longer supports TXT format (I think)...annoying.
 java -jar $SNPEFF/snpEff.jar Bimp \
 	-o txt \
-	out.indel.dp.q.recode.vcf \
+	final.vcf \
 	-no-downstream \
 	-no-upstream > out.snpeff.eff
 	
 sed '/SYNONYMOUS/ !d' out.snpeff.eff > exons.eff #take only SNPS within exons from output file
 sed '/WARNING_/ !d' exons.eff > warnexons.eff #take out warnings from output file
-sed -i '/WARNING/ d' exons.eff 
+sed -i '/WARNING_/ d' exons.eff #51323 lines
 
 
 # make VCF file of only SYN and NSYN SNPs -------------------------
 cut -f 1,2 exons.eff  > synnsyn.list 
-vcftools --vcf out.indel.dp.q.recode.vcf --positions synnsyn.list --recode --out out.nsyn
+vcftools --vcf final.vcf --positions synnsyn.list --recode --out out.nsyn 
 
 #create tabix index for merging ----------------------------------
 bgzip out.nsyn.recode.vcf
 tabix -p vcf out.nsyn.recode.vcf.gz
-
-
-
-

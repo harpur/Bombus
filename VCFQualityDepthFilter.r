@@ -1,4 +1,4 @@
-#!
+#!/usr/bin/Rscript
 ###
 # Trim VF by quality and depth
 ###
