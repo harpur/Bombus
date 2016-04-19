@@ -5,8 +5,8 @@
 
 
 #Environment variables -------------------------------
-export BOMBUS=/media/data2/bombus 
-export MASK=/media/data1/bombus/MaskedSNPs
+export BOMBUS=/data2/bombus 
+export MASK=/data1/bombus/MaskedSNPs
 export SNPEFF=/usr/local/lib/snpEff2
 export GIT=/data2/bombus/git
 export DATA=/data2/bombus/git/data
@@ -23,7 +23,7 @@ gatk -R $BOMBUS/BimpFullGenome.fa -T UnifiedGenotyper \
 	-stand_emit_conf 40.0 \
 	-dcov 200 \
 	--min_base_quality_score 20  \
-	-nt 20 -glm SNP  \
+	-nt 30 -glm SNP  \
 	-ploidy 1 
  
 #Call INDELs
@@ -34,7 +34,7 @@ gatk -R $BOMBUS/BimpFullGenome.fa -T UnifiedGenotyper \
 	-stand_emit_conf 40.0 \
 	-dcov 200 \
 	--min_base_quality_score 20  \
-	-nt 20 -glm indel  \
+	-nt 35 -glm indel  \
 	-ploidy 1 
  
 

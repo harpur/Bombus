@@ -2,8 +2,7 @@
 
 
 
-####contains all analyses performed on datasets in /bombus/
-
+####contains all analyses performed on datasets for Bombus Pop Geno (Harpur et al. 2016)
 
 ####Sample Information 
 #####Bombus impatiens
@@ -105,10 +104,47 @@ Rscript SNIPRE.R "MK.snipre"
 
 Bayesian output in .csv ending in ".bayesianresults" (in /data/)
 
+
+
+
+#####Data Analyses
+All summary data in /data/. 
+
+Using "MK.snipre.bayesianresults" (BIMP vs BTERR gamma) and "gamma"
+
+
+
 #####Conversions
-For conversion between versions of the genome, orthologs, and gene names consult /GFF/ . We used BLAST best matches for conversion between genomes and for Fly "orthologs". For honey bee orthologs, we used a reciprocal best blast.
+For conversion between versions of the genome, orthologs, and gene names consult /GFF/ . We used BLAST best matches for conversion between genomes and for Fly "orthologs" (blastp; e-value 1e-6). For honey bee "orthologs", we used a reciprocal best blast.
 headers of the conversion file (BIMP_XP_GBoldnew_FBGN_recip.txt):
+<pre><code> 
 XP BIMP GBnew GBold FBGN description
+</code></pre>
+
+
+We also took advantage of [OrthoDB](http://orthodb.org/) and created the file "OrthoDB7_w_gamma.txt". This file outlines the likely taxonomic status of genes in the Bombus genome. Headers for the file are Genus, Bombus gene ID, taxonomic class, orthodb id, the number of copies (genera *2), the likely Apis ortholog, and that ortholog's gamma. 
+<pre><code> 
+genus	id	trg	og	n	ortho	gamma
+</code></pre>
+
+This file has only 1:1 orthologs, I've removed all more complex relationships. 
+
+<!---
+We also created the file "OrthoDB7_onetoone_Apis_Bombus.txt" that has the one-to-one orthologs from OrthoDB7 between Apis and Bombus and their respective gamma estimates. 
+
+CHECK THAT!
+-->
+
+
+#####Woodard et al. 2014 data for Bombus DEGs
+Hollis Woodard kindly provided the supplemental data from [her 2014 study](http://www.ncbi.nlm.nih.gov/pmc/articles/PMC4027384/) in which she compared expression (via microarray) between and among different Bombus castes in a very nice full factorial design. This study was made from Bombus ESTs (yay) and annotated against non-Bombus.  
+
+I re-annotated by taking the probes and performing best BLASTN against all Bombus impatiens genes  (1e-6). I then inputted the BBM into Woodard et al's table (now called "rawDEGs.txt"). Some probes matched multiple genes. To deal with this, I took the mean-fold change in expression, mean gamma, and mean p-value from Woodard et al.'s data set fopr each gene with a duplicate. A gene was defined as differentially expressed in one caste/life history stage over another if it was significantly differentially expressed in all comparisons containing it but not sigificantly differentially expressed in any other comparisons. We defined a gene as ifferentially expressed in a reproductive caste if it was  in Foundresses or Queens and a gene is said to be differentially expressed in non-reproductive if it was differentially expressed in either workers or gynes. That is, we used the same definitions as [Woodard et al. (2014)](http://www.ncbi.nlm.nih.gov/pmc/articles/PMC4027384/) 
+
+ 
+#####Apis DEGs
+For Apis mellifera DEGS I pulled the supplemental material from [Harpur et al. 2014](http://www.pnas.org/content/111/7/2614.abstract): "AMELDEGs.txt"
+
 
 
 ####Admixture
@@ -117,36 +153,9 @@ For Bimp K = 1 (CV error = 2.07322)
 For Bterr K = 1
 For Bmel K = 1
 
-
-
-
-
-
-
-
-
-
-
-
-
 ####GO
 Pep_DMELvsBIMPBlast.out
 and Pep_DMELvsBIMPBlast.out
-
-
-
-
-####UTR Gamma
-Need to create a UTR GFF file. I did this from the original GFF file 
-
-
-
-
-
-
-
-
-
 
 
 
