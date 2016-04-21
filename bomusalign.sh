@@ -93,7 +93,7 @@ Rscript $GIT/VCFQualityDepthFilter.r "out.indel.recode.vcf"
 	#mean depth < 3 in BIMP (/data/LowCoverageScaffolds)
 grep -vFwf $DATA/LowCoverageScaffolds out.indel.dp.q.recode.vcf > final.vcf #for each species, I created one cnv.vcf.
 				#cp final.vcf /mnt/nfs/data1/apis/forty3/brock
-				#cp /mnt/nfs/data1/apis/forty3/brock/out.snpeff.eff /data2/bombus/bam_Bter_to_Bimp/ 
+				#cp /mnt/nfs/data1/apis/forty3/brock/out.snpeff.eff /data2/bombus/bam_Bmel_to_Bimp
 # Calling synonymous and non-synonymous sites -------------------------
 	#note, v4.0 of SNPEFF no longer supports TXT format (I think)...annoying.
 java -jar $SNPEFF/snpEff.jar Bimp \

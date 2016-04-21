@@ -105,14 +105,7 @@ Rscript SNIPRE.R "MK.snipre"
 Bayesian output in .csv ending in ".bayesianresults" (in /data/)
 
 
-
-
-#####Data Analyses
-All summary data in /data/. 
-
-Using "MK.snipre.bayesianresults" (BIMP vs BTERR gamma) and "gamma"
-
-
+####Data Analyses
 
 #####Conversions
 For conversion between versions of the genome, orthologs, and gene names consult /GFF/ . We used BLAST best matches for conversion between genomes and for Fly "orthologs" (blastp; e-value 1e-6). For honey bee "orthologs", we used a reciprocal best blast.
@@ -139,13 +132,25 @@ CHECK THAT!
 #####Woodard et al. 2014 data for Bombus DEGs
 Hollis Woodard kindly provided the supplemental data from [her 2014 study](http://www.ncbi.nlm.nih.gov/pmc/articles/PMC4027384/) in which she compared expression (via microarray) between and among different Bombus castes in a very nice full factorial design. This study was made from Bombus ESTs (yay) and annotated against non-Bombus.  
 
-I re-annotated by taking the probes and performing best BLASTN against all Bombus impatiens genes  (1e-6). I then inputted the BBM into Woodard et al's table (now called "rawDEGs.txt"). Some probes matched multiple genes. To deal with this, I took the mean-fold change in expression, mean gamma, and mean p-value from Woodard et al.'s data set fopr each gene with a duplicate. A gene was defined as differentially expressed in one caste/life history stage over another if it was significantly differentially expressed in all comparisons containing it but not sigificantly differentially expressed in any other comparisons. We defined a gene as ifferentially expressed in a reproductive caste if it was  in Foundresses or Queens and a gene is said to be differentially expressed in non-reproductive if it was differentially expressed in either workers or gynes. That is, we used the same definitions as [Woodard et al. (2014)](http://www.ncbi.nlm.nih.gov/pmc/articles/PMC4027384/) 
+I re-annotated by taking the probes and performing best BLASTN against all Bombus impatiens genes  (1e-6). I then inputted the BBM into Woodard et al's table (now called "rawDEGs.txt"). Some probes matched multiple genes. To deal with this, I took the mean-fold change in expression, mean gamma, and mean p-value from Woodard et al.'s data set for each gene with a duplicate. A gene was defined as differentially expressed in one caste/life history stage over another if it was significantly differentially expressed in all comparisons containing it but not sigificantly differentially expressed in any other comparisons. We defined a gene as ifferentially expressed in a reproductive caste if it was  in Foundresses or Queens and a gene is said to be differentially expressed in non-reproductive if it was differentially expressed in either workers or gynes. That is, we used the same definitions as [Woodard et al. (2014)](http://www.ncbi.nlm.nih.gov/pmc/articles/PMC4027384/). The ANOVA model results from Woodard et al. can be found in the file "hollismodel". It looks like the example below where a 0 indicates not differentialyl expressed within that comparison, a 1 indicates over-expression in those comparisons and a -1 indicates udnerexpression in that comparison. For example, NP_001267052.1 is over expressed during brood care (MainBrood).
 
+<pre><code> 
+BimpGene	FW	QG	FQ	WG	MainRep	MainBrood	Interact
+NP_001267052.1	0	0	0	1	0	1	0
+NP_001267051.1	0	1	0	1	0	0	-1
+XP_003484388.1	0	1	0	1	1	1	-1
+XP_003484388.1	0	-1	0	-1	-1	-1	0
+</code></pre>
+
+ 
  
 #####Apis DEGs
 For Apis mellifera DEGS I pulled the supplemental material from [Harpur et al. 2014](http://www.pnas.org/content/111/7/2614.abstract): "AMELDEGs.txt"
 
 
+
+
+<!---
 
 ####Admixture
 I ran admixture on each species individually and then pooled together (see admixture.sh)
@@ -162,7 +167,6 @@ and Pep_DMELvsBIMPBlast.out
 
 
 
-<!---
 http://jeb.biologists.org/content/216/18/3474.full
 http://rspb.royalsocietypublishing.org/content/281/1780/20132419.short
 http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3131825/
@@ -175,8 +179,6 @@ http://www.pnas.org/content/108/18/7472.full
 Quick info on the species used (From Williams...Colla et al. 2014):
 
 B. melanopygus
-
-
 
 
 
