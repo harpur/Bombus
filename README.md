@@ -6,26 +6,36 @@
 
 ####Sample Information 
 #####Bombus impatiens
-Specimen ID|Collection ID|Collection location|Collection coordinates
------------- | ------------- | ------------- | -------------
-Bimp01|08.06.13.01|G. Ross Lord Park|43°46.564' N, 79°27.994' W
-Bimp02|08.06.13.02|Sunnybrook Park|43°43.379' N, 79°21.788' W
-Bimp03|08.15.13.01|High park|43°38.702' N, 79°27.925' W
-Bimp04|08.12.13.01|Boyd Apiary|43°49.503' N, 79°36.481' W
-Bimp05|08.13.13.01|Rouge park|43°49.153' N, 79°10.234' W
-Bimp06|08.14.13.01|Brickworks|43°41.183' N, 79°21.738' W
-Bimp07|08.14.13.02|Eglington Park|43°42.332' N, 79°24.284' W
-Bimp08|08.15.13.03|Eglington Flats|43°41.062' N, 79°30.221' W
-Bimp09|08.16.13.01|Laurence's house|43°39.756' N, 79°26.263' W 
-Bimp10|08.16.13.03|Lindylou park|43°44.897' N, 79°32.591' W 
-Bimp02a|08.06.13.03|Sunnybrook Park|43°43.379' N, 79°21.788' W
-Bimp09a|08.16.13.02|LP house|43°39.756' N, 79°26.263' W 
-Bimp02b|08.06.13.03|Sunnybrook Park|43°43.379' N, 79°21.788' W
-Bimp09b|08.16.13.01|Laurence's house|43°39.756' N, 79°26.263' W 
-Bimp11|08.09.13.02|Rasberry farm|43°57.721' N, 79°33.270' W
+Sample|BioProject|Accession|Species|Location|Identified By
+------------ | ------------- | ------------- | ------------- | ------------- | -------------
+Bimp-10 |PRJNA347806|SAMN05894455|Bombus impatiens|Canada:Toronto:Lindylou park|Packer
+Bimp-1  |PRJNA347806|SAMN05894456|Bombus impatiens|Canada:Toronto:G. Ross Lord Park|Packer
+Bimp-11 |PRJNA347806|SAMN05894457|Bombus impatiens|Canada:Toronto:Rasberry farm|Packer
+Bimp-2b |PRJNA347806|SAMN05894458|Bombus impatiens|Canada:Toronto:Sunnybrook Park|Packer
+Bimp-3  |PRJNA347806|SAMN05894459|Bombus impatiens|Canada:Toronto:High park|Packer
+Bimp-4|PRJNA347806|SAMN05894460|Bombus impatiens|Canada:Toronto:Boyd Apiary|Packer
+Bimp-5|PRJNA347806|SAMN05894461|Bombus impatiens|Canada:Toronto:Rouge park|Packer
+Bimp-6|PRJNA347806|SAMN05894462|Bombus impatiens|Canada:Toronto:Brickworks|Packer
+Bimp-7|PRJNA347806|SAMN05894463|Bombus impatiens|Canada:Toronto:Eglington Park|Packer
+Bimp-8|PRJNA347806|SAMN05894464|Bombus impatiens|Canada:Toronto:Eglington Flats|Packer
+Bter-81  |PRJNA347806|SAMN05894465|Bombus terrestris|United Kingdom: Norwich|Bourke
+Bter-82  |PRJNA347806|SAMN05894466|Bombus terrestris|United Kingdom: Norwich|Bourke
+Bter-83  |PRJNA347806|SAMN05894467|Bombus terrestris|United Kingdom: Norwich|Bourke
+Bter-84  |PRJNA347806|SAMN05894468|Bombus terrestris|United Kingdom: Norwich|Bourke
+Bter-85  |PRJNA347806|SAMN05894469|Bombus terrestris|United Kingdom: Norwich|Bourke
+Bter-87|PRJNA347806|SAMN05894470|Bombus terrestris|United Kingdom: Norwich|Bourke
+Bter-88|PRJNA347806|SAMN05894471|Bombus terrestris|United Kingdom: Norwich|Bourke
+Bter-89|PRJNA347806|SAMN05894472|Bombus terrestris|United Kingdom: Norwich|Bourke
+Bter-90|PRJNA347806|SAMN05894473|Bombus terrestris|United Kingdom: Norwich|Bourke
+Bter-91|PRJNA347806|SAMN05894474|Bombus terrestris|United Kingdom: Norwich|Bourke
+BmelR003|PRJNA347806|SAMN05894475|Bombus melanopygus|USA:Oregon:Cape Sebastian State Park|Hines
+R007|PRJNA347806|SAMN05894476|Bombus melanopygus|USA:Oregon:Rogue river, Jerry Flat Rd.|Hines
+R001|PRJNA347806|SAMN05894477|Bombus melanopygus|USA:Oregon:Tahkenitch Creek Trailhead Rd|Hines
+
 
 ####Alignment details
-Alignment followed standard [GATK Best Practices for aligning genomes](http://www.broadinstitute.org/partnerships/education/broade/gatk-best-practices-and-building-analysis-pipelines-queue). In brief:
+Alignment followed previous standard [GATK Best Practices for aligning genomes](http://www.broadinstitute.org/partnerships/education/broade/gatk-best-practices-and-building-analysis-pipelines-queue). In brief:
+Example details in bombusalign.sh
 
 	1. Trim fastq of adaptor sequences 
 	2. Align with BWA v0.7.5a-r405 sampe to the Bobmus terrestris reference genome (see below)
@@ -132,7 +142,7 @@ CHECK THAT!
 #####Woodard et al. 2014 data for Bombus DEGs
 Hollis Woodard kindly provided the supplemental data from [her 2014 study](http://www.ncbi.nlm.nih.gov/pmc/articles/PMC4027384/) in which she compared expression (via microarray) between and among different Bombus castes in a very nice full factorial design. This study was made from Bombus ESTs (yay) and annotated against non-Bombus.  
 
-I re-annotated by taking the probes and performing best BLASTN against all Bombus impatiens genes  (1e-6). I then inputted the BBM into Woodard et al's table (now called "rawDEGs.txt"). Some probes matched multiple genes. To deal with this, I took the mean-fold change in expression, mean gamma, and mean p-value from Woodard et al.'s data set for each gene with a duplicate. A gene was defined as differentially expressed in one caste/life history stage over another if it was significantly differentially expressed in all comparisons containing it but not sigificantly differentially expressed in any other comparisons. We defined a gene as ifferentially expressed in a reproductive caste if it was  in Foundresses or Queens and a gene is said to be differentially expressed in non-reproductive if it was differentially expressed in either workers or gynes. That is, we used the same definitions as [Woodard et al. (2014)](http://www.ncbi.nlm.nih.gov/pmc/articles/PMC4027384/). The ANOVA model results from Woodard et al. can be found in the file "hollismodel". It looks like the example below where a 0 indicates not differentialyl expressed within that comparison, a 1 indicates over-expression in those comparisons and a -1 indicates udnerexpression in that comparison. For example, NP_001267052.1 is over expressed during brood care (MainBrood).
+I re-annotated by taking the probes and performing best BLASTN against all Bombus impatiens genes  (1e-6). I then inputted the BBM into Woodard et al's table (now called "rawDEGs.txt"). Some probes matched multiple genes. To deal with this, I took the mean-fold change in expression, mean gamma, and mean p-value from Woodard et al.'s data set for each gene with a duplicate. I repeated thsi aanalysis with only 1:1 matches (i.e. no duplicates) and got very similar results (see figure QWD_rep_Selection_NODUPLICATES.pdf). A gene was defined as differentially expressed in one caste/life history stage over another if it was significantly differentially expressed in all comparisons containing it but not sigificantly differentially expressed in any other comparisons. We defined a gene as ifferentially expressed in a reproductive caste if it was  in Foundresses or Queens and a gene is said to be differentially expressed in non-reproductive if it was differentially expressed in either workers or gynes. That is, we used the same definitions as [Woodard et al. (2014)](http://www.ncbi.nlm.nih.gov/pmc/articles/PMC4027384/). The ANOVA model results from Woodard et al. can be found in the file "hollismodel". It looks like the example below where a 0 indicates not differentialyl expressed within that comparison, a 1 indicates over-expression in those comparisons and a -1 indicates udnerexpression in that comparison. For example, NP_001267052.1 is over expressed during brood care (MainBrood).
 
 <pre><code> 
 BimpGene	FW	QG	FQ	WG	MainRep	MainBrood	Interact
@@ -151,6 +161,11 @@ For Apis mellifera DEGS I pulled the supplemental material from [Harpur et al. 2
 
 
 <!---
+
+Analyses are stored in /data/ and not git.
+
+
+
 
 ####Admixture
 I ran admixture on each species individually and then pooled together (see admixture.sh)
@@ -187,6 +202,24 @@ regarding metabolis signatures:
 https://books.google.ca/books?id=ifOcBAAAQBAJ&printsec=frontcover
 http://onlinelibrary.wiley.com/doi/10.1111/mec.13410/epdf
 http://www.ncbi.nlm.nih.gov/pubmed/26453894
+
+
+
+
+
+
+
+####Fucking around with caste-spp genes:
+I took my ortho list (1:1 amel to bombus)
+I integrated the estimates of gamma in each spp
+I also integrated the caste-specific gene expression patterns from Harpur et al. and Woodard et al. Comparing gene expression with protein expression seems silly...
+
+
+
+
+
+
+
 
 
 

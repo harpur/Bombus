@@ -1,0 +1,195 @@
+#B. melanopygus aligned to B. impatiens pipeline & bash commands
+
+------------------------------------------------------------------------------------
+#File(fastq, bam) locations as of now
+/media/data1/bombus/heather/bmel/B_melanopygus_FASTQ/Bmel_melsubset
+#VCF files are in /media/data1/bombus/vcf_Bmel_to_Bimp
+
+#Bees were already trimmed, so proceed to BWA
+-------------------------------------------------------------------------------------
+#Aligning by BWA
+
+for f in /media/data1/bombus/heather/bmel/B_melanopygus_FASTQ/Bmel_melsubset/*.fastq
+	do bwa aln -t3 /media/data1/bombus/BimpFullGenome.fa $f > $f.sai &
+done
+
+*note for #CPUs each sample goes through number of cpus specified. So if you have 3 fastq files & t=2, then 6 cpus will be used
+-------------------------------------------------------------------------------------
+
+#Making BAM files, using sampe for multiple bees using script
+"/media/data1/bombus/heather/bmel/B_melanopygus_FASTQ/Bmel_melsubset/sampe_run.sh"
+Ref: /media/data1/afz/git/AlignmentCreation.sh
+
+filename='beelist.txt'
+exec 4<$filename
+echo Start
+while read -u4 p ; do
+	pidlist_sampe=""
+   #LDB23S_R1.fastq.sai
+	#echo $p
+	endfq="_R1.fastq"
+	endfq2="_R2.fastq"
+	sai=".sai"
+	fq1=$p$endfq
+	fq2=$p$endfq2
+	r1=$fq1$sai
+	r2=$fq2$sai
+	bwa sampe -r "@RG\tID:$p\tPL:illumina\tLB:$p\tPU:run\tSM:$p" /media/data1/bombus/BimpFullGenome.fa $r1 $r2 $fq1 $fq2 | samtools view -Sb - | samtools sort -@ 5 - $p.1.sorted &
+done
+
+#Note: If sampe doesn't work, check for CRs in sampe_run script & change beelist path to the directory of running. And change the filename.
+#There could be a merging step after this if the one bee is run in two lanes, some Apis bees were.
+---------------------------------------------------------------------------------
+#Making a BAM file through use of stampy and splitter.
+
+#Python script in /scripts/splitter/stampy_splitter_bwa
+Check number of cpus before you run it
+/scripts/splitter/stampy_splitter_bwa_alivia [CPU=10]
+#You can change the divergence parameter
+
+#First create index through stampy (not sure how, haven't done it myself)
+#Bombus terrestris referencing in /media/data1/bombus
+#File: BterrFullGenome.stidx but when you give the file name, don't give the extension stdix
+
+
+#For multiple bees, use the script in /media/data1/bombus/heather/bmel/B_melanopygus_FASTQ/Bmel_melsubset/stampy_run.sh
+
+filename='beelist.txt'
+exec 4<$filename
+echo Start
+while read -u4 p ; do
+	python /scripts/splitter/stampy_splitter_bwa_alivia $p.stampy.bam $p.bam 0.001 /media/data1/bombus/BimpFullGenome &
+done
+
+#*Note: you might need to change the file extension from last step e.g., changed from .1.sorted to .bam
+#Divergence used between melanopygus & bimp is 0.001 
+
+---------------------------------------------------------------------------------
+#Removing duplicates(ref see GATK documentation,) using picard 
+
+For multiple bees,
+#Remove dups and add read groups
+filename='beelist.txt'
+exec 4<$filename
+echo Start
+while read -u4 p ; do
+	export PICARD=/usr/lib/picard-tools-1.80
+	picard MarkDuplicates.jar I=$p.stampy.bam  O=$p.stampy.dp.bam METRICS_FILE=$p.Dups VALIDATION_STRINGENCY=SILENT MAX_FILE_HANDLES_FOR_READ_ENDS_MAP=1000
+	picard AddOrReplaceReadGroups.jar INPUT= $p.stampy.dp.bam   OUTPUT=$p.stampy.rg.dp.bam RGID=$p RGPL=illumina RGLB=$p RGPU=run RGSM=$p VALIDATION_STRINGENCY=LENIENT
+	samtools index $p.stampy.rg.dp.bam
+done
+
+For multiple bees, use the script in /media/data1/bombus/heather/bmel/B_melanopygus_FASTQ/Bmel_melsubset/dups_readgrps.sh
+
+----------------------------------------------------------------------------------
+#Align indels by GATK
+
+For multiple bees,
+#GATK indel Realigner
+#change number of cpus -nt(number of threads)
+
+e.g.,
+filename='beelist.txt'
+exec 4<$filename
+echo Start
+while read -u4 p ; do
+	gatk -T RealignerTargetCreator -R /media/data1/bombus/BimpFullGenome.fa -nt 5 -I $p.stampy.rg.dp.bam  -o $p.intervals
+	gatk -T IndelRealigner -R /media/data1/bombus/BimpFullGenome.fa -I $p.stampy.rg.dp.bam  -targetIntervals  $p.intervals -o $p.stampy.rg.dp.gatk.bam
+done
+
+-------------------------------------------------------------------------------------------
+#Depth of coverage for all sites
+
+nohup gatk -R /media/data1/bombus/BimpFullGenome.fa -T DepthOfCoverage -o Bmel3bees_coverage -I BmelR003.stampy.rg.dp.gatk.bam -I R001.stampy.rg.dp.gatk.bam -I R007.stampy.rg.dp.gatk.bam &
+---------------------------------------------------------------------------------------------
+#Variant & indel calling by GATK
+#change nt: number of threads
+#VCF files are in /media/data1/bombus/vcf_Bmel_to_Bimp
+
+#SNP
+gatk -R /media/data1/bombus/BimpFullGenome.fa -T UnifiedGenotyper  -I /media/data1/bombus/heather/bmel/B_melanopygus_FASTQ/Bmel_melsubset/bam.list -o BmeltoBimp3bees.raw.vcf -stand_call_conf 60.0 -stand_emit_conf 40.0 -dcov 200 --min_base_quality_score 20 -nt 10 -glm SNP -ploidy 1 &
+
+#indel
+gatk -R /media/data1/bombus/BimpFullGenome.fa -T UnifiedGenotyper  -I /media/data1/bombus/heather/bmel/B_melanopygus_FASTQ/Bmel_melsubset/bam.list -o BmeltoBimp3bees.raw.indel.vcf -stand_call_conf 60.0 -stand_emit_conf 40.0 -dcov 200 --min_base_quality_score 20 -nt 8 -glm INDEL -ploidy 1 &
+--------------------------------------------------------------------------------------------------------
+#Remove sites around indels
+
+gatk -R /media/data1/bombus/BimpFullGenome.fa -T VariantFiltration -V BmeltoBimp3bees.raw.vcf -o BmeltoBimp.indel.vcf --mask  BmeltoBimp3bees.raw.indel.vcf --maskExtension 10 --maskName "InDel" 
+
+vcftools --vcf BmeltoBimp.indel.vcf --recode --remove-filtered-all --out BmeltoBimp.indel #output named as BmeltoBimp.indel.recode.vcf
+-----------------------------------------------------------------------------------------------------------
+#Make file depth filter (average coverage per SNP site)
+
+vcftools --vcf BmeltoBimp.indel.recode.vcf --site-mean-depth
+
+#Coded in a separate Rscript, but here is some of the code within:
+R
+depth=read.table(file="out.ldepth.mean",header=T)
+1.5*IQR(depth$MEAN_DEPTH)+quantile(depth$MEAN_DEPTH,0.75) #maxdp - add to VCF command below
+quantile(depth$MEAN_DEPTH,0.25)-1.5*IQR(depth$MEAN_DEPTH) #mindp
+For BmeltoBimp, 
+> 1.5*IQR(depth$MEAN_DEPTH)+quantile(depth$MEAN_DEPTH,0.75)
+    75%
+21.6667
+> quantile(depth$MEAN_DEPTH,0.25)-1.5*IQR(depth$MEAN_DEPTH)
+   25%
+5.6667
+
+#basically, just trim at whatever these values are.
+vcftools --vcf BmeltoBimp.indel.recode.vcf --recode --remove-filtered-all  --out BmeltoBimp.indel.dp  --min-meanDP 6 --max-meanDP 22
+#Note, the maxDP filter doesn't work always, so we will filter it out later.
+-------------------------------------------------------------------------------------------------------------
+#Make file (BLAST filter) Bimp.indel.dp.bl.recode.vcf
+
+vcftools --vcf BmeltoBimp.indel.dp.recode.vcf  --exclude-positions /media/data1/bombus/MaskedSNPs/BimpAllSNPs --recode --remove-filtered-all  --out BmeltoBimp.indel.dp.bl
+--------------------------------------------------------------------------------------------------------------
+[Make file (diploid drone calls) Bimp.indel.dp.bl.dd.recode.vcf
+	#Bimp.raw.DIPLOID.vcf contains a set of SNOs called when diploid
+	#Had to remove 88 and 89
+	#vcftools --vcf Bimp.raw.DIPLOID.vcf  --remove-indv "Bimp-89" --remove-indv "Bimp-88" --recode
+
+vcftools --vcf Bimp.DIPLOID.raw.vcf --hardy 
+
+R
+hwe=read.table(file="out.hwe",header=T)
+hets=apply(hwe[3],1,function(x) unlist(strsplit(x, "/"))[2])
+hwe1=hwe[c(1,2)][which(hets>0),]
+write.table(file="/media/data1/bombus/MaskedSNPs/DiploidBimp",hwe1,col.names=F,row.names=F,quote=F)
+
+]
+#Part within parentheses is already done. Brock outputted a file with diploid drone positions and 5 bp around it to be removed
+#/media/data1/bombus/MaskedSNPs/BimpDiploidSNPs5
+
+vcftools --vcf BmeltoBimp.indel.dp.bl.recode.vcf   --exclude-positions /media/data1/bombus/MaskedSNPs/BimpDiploidSNPs5 --recode --remove-filtered-all --out BmeltoBimp.indel.dp.bl.dd
+----------------------------------------------------------------------------------------------------------------
+#Second depth filter incase maxDP doesn't work
+#Run site mean depth on last VCF created "BtertoBimp.indel.dp.bl.dd"
+
+vcftools --vcf BmeltoBimp.indel.dp.bl.dd.recode.vcf --site-mean-depth
+
+In R
+depth=read.table(file="out.ldepth.mean",header=T)
+head(depth)
+depth2 <- depth[which(depth$MEAN_DEPTH > 22),] #Listing the file with Mean Depth greater than.
+depth3 <- depth2[1:2]
+write.table(depth3, "BmeltoBimpMaxDP.txt", row.names=FALSE, quote=FALSE, sep="\t")
+
+#Exclude these positions in the VCF file
+vcftools --vcf BmeltoBimp.indel.dp.bl.dd.recode.vcf   --exclude-positions BmeltoBimpMaxDP.txt --recode --remove-filtered-all --out BmeltoBimp.indel.dp.bl.dd.maxdp
+
+#Additional checking
+Check depth filter again and ensure anything above maxDP is removed
+vcftools --vcf BmeltoBimp.indel.dp.bl.dd.maxdp.recode.vcf --site-mean-depth
+depth4 <- read.table(file="out.ldepth.mean",header=T)
+summary(depth4$MEAN_DEPTH) 
+dp_scaffold <- aggregate(depth4$MEAN_DEPTH, by=list(depth4$CHROM), mean)
+colnames(dp_scaffold)[1:2] <- c("Group", "MeanDepth")
+write.table(depth4, "Depth_scaffold_BmeltoBimp.txt", row.names=FALSE, quote=FALSE, sep="\t")
+------------------------------------------------------------------------------------------------------------------
+#So 6 files in the end
+#BmeltoBimp.raw.recode.vcf
+#BmeltoBimp.indel.recode.vcf
+#BmeltoBimp.indel.dp.recode.vcf
+#BmeltoBimp.indel.dp.bl.recode.vcf
+#BmeltoBimp.indel.dp.bl.dd.recode.vcf
+#BmeltoBimp.indel.dp.bl.dd.maxdp.recode.vcf
