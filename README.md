@@ -5,7 +5,6 @@
 ####contains all analyses performed on datasets for Bombus Pop Geno (Harpur et al. 2016)
 
 ####Sample Information 
-#####Bombus impatiens
 Sample|BioProject|Accession|Species|Location|Identified By
 ------------ | ------------- | ------------- | ------------- | ------------- | -------------
 Bimp-10 |PRJNA347806|SAMN05894455|Bombus impatiens|Canada:Toronto:Lindylou park|Packer
