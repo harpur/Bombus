@@ -2,7 +2,7 @@
 
 
 
-####contains all analyses performed on datasets for Bombus Pop Geno (Harpur et al. 2016)
+### contains all analyses performed on datasets for Bombus Pop Geno (Harpur et al. 2016)
 
 ####Sample Information 
 Sample|BioProject|Accession|Species|Location|Identified By
