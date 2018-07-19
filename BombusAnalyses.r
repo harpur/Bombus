@@ -211,7 +211,7 @@ dev.off()
 	#I did this previously in BombusDEGs.r, but I'll add it here and repeat
 	#In the cases where multiple gene IDs hit multiple probes, I'm going to average P values. 
 	
-degs = read.table(file="/media/data1/bombus/DEG/rawDEGs.txt",header=T)
+degs = read.table(file="/data2/bombus/DEG/rawDEGs.txt",header=T)
 degs = aggregate(degs[c(2:10)], by=list(degs$XP), mean)
 names(degs)[1]="XP"
 sp = rep("NDEG", nrow(degs))
